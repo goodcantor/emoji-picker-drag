@@ -7,12 +7,70 @@
 
   box-sizing: border-box;
 }
+.show {
+  display: flex !important;
+}
+
+.none {
+  display: none !important;
+}
 
 .delete {
   width: 100%;
   height: 400px;
   opacity: 0;
   display: block !important;
+  pointer-events: none;
+}
+.deletelast {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: absolute;
+  right: 0;
+
+  width: 100px;
+  height: 100%;
+  background-color: black;
+  color: white;
+  user-select: none;
+}
+
+.button {
+  padding: 20px 40px;
+  background-color: black;
+  border-radius: 4px;
+  color: white;
+  font-size: 30px;
+  margin: 20px;
+}
+
+.cross {
+  cursor: pointer;
+  user-select: none;
+  width: 38px;
+  height: 38px;
+  padding: 5px;
+  border-bottom: 5px solid #222222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #222222;
+  color: white;
+  display: none;
+  position: fixed;
+  bottom: 50vh;
+  right: 0;
+}
+
+#emojipicker {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 50%;
+  bottom: 0;
+  left: 0;
 }
 
 body {
@@ -24,22 +82,30 @@ li {
 }
 
 .list-group {
+  position: relative;
+  /* z-index: 5; */
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   /* align-items: center; */
   border: 2px solid black;
 }
 
 .list-group-item {
-  width: 100px;
-  height: 100px;
-  background: rgb(255, 0, 0);
+  /* width: 100px;
+  height: 100px; */
+  /* background: rgb(255, 0, 0); */
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
-  border: 2px solid white;
-  font-size: 30px;
+  /* border: 2px solid white; */
+  font-size: 80px;
+  padding: 20px;
+  cursor: move;
+}
+
+#sortTrue {
+  min-height: 140px;
 }

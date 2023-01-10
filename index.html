@@ -20,53 +20,76 @@
     <style></style>
   </head>
   <body>
+    <button class="button" id="button" onclick="myFunction()">Add emoji</button>
     <!-- sort: true -->
     <div id="sortTrue" class="list-group">
-      <!-- <div class="list-group-item">1</div>
-      <div class="list-group-item">2</div>
-      <div class="list-group-item">3</div>
-      <div class="list-group-item">4</div>
-      <div class="list-group-item">5</div>
-      <div class="list-group-item">6</div> -->
-    </div>
+      <div class="deletelast" onclick="deleteLast()">
+        <?xml version="1.0" encoding="utf-8"?>
 
-    <!-- sort: false -->
-    <h1>drag to delete</h1>
-    <div id="sortFalse" class="list-group delete">
-      <!-- <div class="list-group-item">qux</div>
-      <div class="list-group-item">quux</div> -->
+        <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+        <svg
+          fill="#ffffff"
+          version="1.1"
+          id="Layer_1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="40px"
+          height="40px"
+          viewBox="0 0 512 512"
+          enable-background="new 0 0 512 512"
+          xml:space="preserve"
+        >
+          <polygon
+            points="335.188,154.188 256,233.375 176.812,154.188 154.188,176.812 233.375,256 154.188,335.188 176.812,357.812 
+	256,278.625 335.188,357.812 357.812,335.188 278.625,256 357.812,176.812 "
+          />
+          <path
+            d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
+	c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"
+          />
+        </svg>
+      </div>
     </div>
-
     <main>
       <div class="flex">
         <div>
           <!-- emoji picker keyboard -->
-          <emoji-picker></emoji-picker>
-        </div>
-        <div>
-          <div style="padding: 20px" role="alert" aria-live="polite">
-            <pre style="display: none"></pre>
-          </div>
-          <div
-            class="private-browsing-warning"
-            style="padding: 20px; display: none; border: 2px dashed crimson"
-            role="alert"
-          >
-            Note that <code>emoji-picker-element</code> does not support
-            environments without IndexedDB. For polyfills and workarounds, see
-            <a
-              href="https://github.com/nolanlawson/emoji-picker-element/blob/master/README.md#environments-without-indexeddb"
-            >
-              the README </a
-            >.
-          </div>
+          <emoji-picker id="emojipicker"></emoji-picker>
         </div>
       </div>
     </main>
+    <div class="cross" id="cross" onclick="myFunction()">
+      <?xml version="1.0" encoding="utf-8"?>
+
+      <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+      <svg
+        fill="#ffffff"
+        version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="100%"
+        height="100%"
+        viewBox="0 0 512 512"
+        enable-background="new 0 0 512 512"
+        xml:space="preserve"
+      >
+        <polygon
+          points="335.188,154.188 256,233.375 176.812,154.188 154.188,176.812 233.375,256 154.188,335.188 176.812,357.812 
+	256,278.625 335.188,357.812 357.812,335.188 278.625,256 357.812,176.812 "
+        />
+        <path
+          d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
+	c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"
+        />
+      </svg>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.js"></script>
-    <script src="script.js"></script>
-    <script>
+    <script defer src="script.js"></script>
+    <script defer>
       const sortTrue = document.querySelector("#sortTrue");
       const sortFalse = document.querySelector("#sortFalse");
 
@@ -74,17 +97,16 @@
       Sortable.create(sortTrue, {
         group: "sorting",
         sort: true,
-      });
-
-      // sort: false
-      Sortable.create(sortFalse, {
-        group: "sorting",
-        sort: true,
+        removeOnSpill: true, // Enable plugin
+        // Called when item is spilled
+        onSpill: function (/**Event*/ evt) {
+          evt.item; // The spilled item
+        },
       });
     </script>
 
     <!-- needs for emoji keyboard -->
-    <script type="module">
+    <script type="module" defer>
       import "https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js";
       import "https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js"; // avoid extra round-trip
 
@@ -157,47 +179,8 @@
         import(
           "https://cdn.jsdelivr.net/npm/focus-visible@^5/dist/focus-visible.js"
         );
-
-      document.addEventListener("DOMContentLoaded", async () => {
-        const picker = $("emoji-picker");
-        const pre = $("pre");
-        const onEvent = (e) => {
-          console.log(e);
-          pre.style.display = "block";
-          pre.innerHTML = `Event: ${JSON.stringify(
-            e.type
-          )}\n\nData:\n\n${JSON.stringify(e.detail, null, 2)}`;
-        };
-        picker.addEventListener("emoji-click", onEvent);
-        picker.addEventListener("skin-tone-change", onEvent);
-
-        $$("input[name=darkmode]").forEach((input) => {
-          input.addEventListener("change", (e) => {
-            picker.classList.toggle("dark", e.target.value === "dark");
-            picker.classList.toggle("light", e.target.value === "light");
-          });
-        });
-        $("#custom").addEventListener("change", async (e) => {
-          if (e.target.checked) {
-            await loadCustomEmoji();
-            picker.customEmoji = customEmoji;
-          } else {
-            picker.customEmoji = [];
-          }
-          picker.classList.toggle("has-custom", !!e.target.checked);
-        });
-
-        if (!(await hasIDB())) {
-          $(".private-browsing-warning").style.display = "block";
-        }
-
-        if (focusVisiblePolyfillPromise) {
-          await focusVisiblePolyfillPromise;
-          applyFocusVisiblePolyfill(picker.shadowRoot);
-        }
-      });
     </script>
-    <script>
+    <script defer>
       let emoj;
 
       document
@@ -205,13 +188,10 @@
         .addEventListener("emoji-click", (event) => {
           console.log(event.detail.unicode);
           let li = document.createElement("div");
-          li.innerHTML = `<div class="list-group-item">${event.detail.unicode}</div>`;
+          li.className = "list-group-item";
+          li.innerHTML = `${event.detail.unicode}`;
           document.querySelector("#sortTrue").append(li);
         });
-
-      // let li = document.createElement("div");
-      // li.innerHTML = `<div class="list-group-item">${event.detail.unicode}</div>`;
-      // document.querySelector("#sortTrue").append(li);
     </script>
   </body>
 </html>
