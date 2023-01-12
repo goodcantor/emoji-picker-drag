@@ -6,28 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Emoji</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="normalize.css" />
-
-    <!-- needs for emoji -->
-    <link
-      rel="modulepreload"
-      href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js"
-    />
-    <link
-      rel="modulepreload"
-      href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js"
-    />
-    <style></style>
   </head>
   <body>
-    <button class="button" id="button" onclick="myFunction()">Add emoji</button>
-    <!-- sort: true -->
+    <button class="button" id="button" onclick="closeEmojiBoard()">Add emoji</button>
     <div id="sortTrue" class="list-group">
-      <div class="deletelast" onclick="deleteLast()">
+      <div class="deletelast" onclick="deleteLastEmoji()">
         <?xml version="1.0" encoding="utf-8"?>
-
         <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
         <svg
           fill="#ffffff"
           version="1.1"
@@ -59,11 +44,9 @@
         </div>
       </div>
     </main>
-    <div class="cross" id="cross" onclick="myFunction()">
+    <div class="cross" id="cross" onclick="closeEmojiBoard()">
       <?xml version="1.0" encoding="utf-8"?>
-
       <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-      <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
       <svg
         fill="#ffffff"
         version="1.1"
@@ -87,111 +70,15 @@
       </svg>
     </div>
 
+    <!-- Sortable.js library -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.js"></script>
+
     <script defer src="script.js"></script>
-    <script defer>
-      const sortTrue = document.querySelector("#sortTrue");
-      const sortFalse = document.querySelector("#sortFalse");
 
-      // sort: true
-      Sortable.create(sortTrue, {
-        group: "sorting",
-        sort: true,
-        removeOnSpill: true, // Enable plugin
-        // Called when item is spilled
-        onSpill: function (/**Event*/ evt) {
-          evt.item; // The spilled item
-        },
-      });
-    </script>
-
-    <!-- needs for emoji keyboard -->
+    <!-- required for emojikeyboard -->
     <script type="module" defer>
       import "https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/picker.js";
       import "https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/database.js"; // avoid extra round-trip
-
-      const $ = document.querySelector.bind(document);
-      const $$ = (_) => Array.from(document.querySelectorAll(_));
-      let customEmoji;
-
-      // See https://stackoverflow.com/a/8533927
-      function supportsSelector(selector) {
-        const style = document.createElement("style");
-        document.head.appendChild(style);
-        try {
-          style.sheet.insertRule(selector + "{}", 0);
-        } catch (e) {
-          return false;
-        } finally {
-          document.head.removeChild(style);
-        }
-        return true;
-      }
-
-      // check for private browsing mode to show the warning
-      async function hasIDB() {
-        if (typeof indexedDB === "undefined") {
-          return false;
-        }
-
-        try {
-          const idbFailed = await new Promise((resolve) => {
-            const db = indexedDB.open("test-idb");
-            db.onerror = () => resolve(true);
-            db.onsuccess = () => {
-              indexedDB.deleteDatabase("test-idb");
-              resolve(false);
-            };
-          });
-          if (idbFailed) {
-            return false;
-          }
-        } catch (e) {
-          return false;
-        }
-        return true;
-      }
-
-      async function loadCustomEmoji() {
-        if (customEmoji) {
-          return;
-        }
-        const categoriesToCustomEmoji = await (
-          await fetch("./custom.json")
-        ).json();
-        customEmoji = [];
-        for (const [category, names] of Object.entries(
-          categoriesToCustomEmoji
-        )) {
-          for (const name of names) {
-            customEmoji.push({
-              category: category || undefined,
-              name,
-              shortcodes: [name],
-              url: `./custom/${name}.svg`,
-            });
-          }
-        }
-      }
-
-      const focusVisiblePolyfillPromise =
-        !supportsSelector(":focus-visible") &&
-        import(
-          "https://cdn.jsdelivr.net/npm/focus-visible@^5/dist/focus-visible.js"
-        );
-    </script>
-    <script defer>
-      let emoj;
-
-      document
-        .querySelector("emoji-picker")
-        .addEventListener("emoji-click", (event) => {
-          console.log(event.detail.unicode);
-          let li = document.createElement("div");
-          li.className = "list-group-item";
-          li.innerHTML = `${event.detail.unicode}`;
-          document.querySelector("#sortTrue").append(li);
-        });
     </script>
   </body>
 </html>
